@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block custom_css %}
+
+{% endblock %}
+
+
+{% block main_content %}
+<main role="main">
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron mb-4">
+        <div class="container">
+            <h1 class="display-3">Hello, {{profile_data.Name}}!</h1>
+            <p>This is a template for a simple marketing or informational website. It includes a large callout called a
+                jumbotron and three supporting pieces of content. Use it as a starting point to create something more
+                unique.</p>
+            <!-- Button trigger modal -->
+            <a href="{% url 'profile_update_page' %}" class="btn btn-primary">
+                Edit Profile
+            </a>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_todo">
+                Add ToDo
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Example row of columns -->
+        <hr>
+        <h4>
+            Your ToDo(s) <span class="badge bg-secondary">{{total_todo}}</span>
+        </h4>
+        
+        <div class="row">
+            {% for todo in my_todo %}
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title h5">{{ todo.Title }}</h5>
+                        <p class="card-text">{{ todo.Content }}</p>
+                        <label class="float-left text-muted small">{{ todo.DateCreated }}</label>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <div class="btn-group float-right m-auto" role="group" aria-label="Basic example">
+                            <a href="javascript:" todo_id="{{todo.id}}" todo_title="{{ todo.Title }}" todo_content="{{todo.Content}}" class="btn btn-sm btn-primary edit_todo" data-bs-toggle="modal" data-bs-target="#edit_todo">Edit</a>
+                            <a href="{% url 'delete_todo' pk=todo.id %}" class="btn btn-sm btn-danger">Delete</a>
+                        </div>
+                      </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- /container -->
+
+</main>
+  
+  <!-- Add New ToDo Modal -->
+  <div class="modal fade" id="add_todo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form method="POST" action="{% url 'create_todo' %}" class="modal-content">
+            {% csrf_token %}
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Add New ToDo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" name="title" class="form-control" id="title" placeholder="Title">
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">ToDo Content</label>
+                    <textarea class="form-control" name="content" id="content" rows="3"
+                        placeholder="Write your todo content here.." style="resize: none;"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+        </form>
+    </div>
+  </div>
+
+  <!-- Edit ToDo Modal -->
+  <div class="modal fade" id="edit_todo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form method="POST" action="" class="modal-content edit_todo_form">
+            {% csrf_token %}
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Edit ToDo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="edit_title" class="form-label">Title</label>
+                    <input type="text" name="title" class="form-control" id="edit_title" placeholder="Title">
+                </div>
+                <div class="mb-3">
+                    <label for="edit_content" class="form-label">ToDo Content</label>
+                    <textarea class="form-control" name="content" id="edit_content" rows="3"
+                        placeholder="Write your todo content here.." style="resize: none;"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('.edit_todo').click(function() {
+            var todo_id = $(this).attr('todo_id'),
+                todo_title = $(this).attr('todo_title'),
+                todo_content = $(this).attr('todo_content');
+
+            console.log(todo_id, todo_title, todo_content)
+
+            var url = `/update_todo/${todo_id}/`
+            $('.edit_todo_form').attr('action', url);
+
+            $('#edit_title').val( todo_title );
+            $('#edit_content').val( todo_content );
+        })
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static 'css/profile_update.css' %}"
+{% endblock %}
+
+
+{% block main_content %}
+<main role="main">
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron mb-4">
+        <div class="container">
+            <h1 class="display-2">Hello,Welcome {{profile_data.Name}}!</h1>
+            <p>This is my niranjan  a template for a simple marketing or informational website. It includes a large callout called a
+                jumbotron and three supporting pieces of content. Use it as a starting point to create something more
+                unique.</p>
+            <!-- Button trigger modal -->
+            <a href="{% url 'profile_page' %}" class="btn btn-primary">Back</a>
+            
+        </div>
+    </div>
+
+    
+        <hr>
+            <div class="row">
+                <form class="form-signin col-8 needs-validation" style="border-right: solid 1px #333" method="POST" action="{% url 'profile_update' %}" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    <h3 class="mb-4">My profile Information</h3>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="text-center mb-4">
+                                <img src="{{profile_data.ProfilePhoto.url}}" style="width: 100px; height:100px; border-radius: 100px;" class="img-fluid mb-3" alt="{{profile_data.Name}} photo">
+                                <div class="mb-3 m-auto" style="width: max-content">
+                                    <label for="formFile" class="form-label">Upload Profile Photo</label>
+                                    <input class="form-control" name="profile_photo" type="file" id="formFile">
+                                  </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-label-group">
+                                <input type="email" id="inputEmail" class="form-control" name="email" value="{{profile_data.Email}}" placeholder="Email address" readonly>
+                                <label for="inputEmail">Email address</label>
+                            </div>
+
+                            <div class="form-label-group">
+                                <input type="text" id="inputName" class="form-control" name="name" placeholder="Full name" value="{{profile_data.Name}}" required>
+                                <label for="inputName">Full Name</label>
+                                <div class="invalid-tooltip">
+                                    Please enter your full name.
+                                </div>
+                            </div>
+                    
+                            <div class="form-label-group">
+                                <textarea id="inputAddress" class="form-control pb-2" name="address" placeholder="Address..."
+                                    required rows="2">{{profile_data.Address}}</textarea>
+                                <label for="inputAddress">Address</label>
+                                <div class="invalid-tooltip">
+                                    Please write your address here.
+                                </div>
+                            </div>
+                            <button class="btn btn-lg btn-primary btn-block" type="submit">Update</button>
+                            
+                        </div>
+                    </div>
+                </form>
+
+                <form class="form-signin col-4 needs-validation" method="POST" action="{% url 'change_password' %}" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    <h3 class="mb-4">Security / Change Password</h3>
+                    <div class="form-label-group">
+                        <input type="password" id="inputCurrentPassword"  class="form-control" name="current_password" placeholder="Password"
+                            required>
+                        <label for="inputCurrentPassword">Current Password</label>
+                        <div class="invalid-tooltip">
+                            Please enter your current password.
+                        </div>
+                    </div>
+                    <div class="form-label-group">
+                        <input type="password" id="inputNewPassword" class="form-control" name="new_password" placeholder="Password"
+                            required>
+                        <label for="inputNewPassword">New Password</label>
+                        <div class="invalid-tooltip">
+                            Please create new password.
+                        </div>
+                    </div>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Change password</button>
+                </form>
+            </div>
+    
+    <!-- /container -->
+
+</main>
+ 
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $('input, textarea').each(function () {
+            if ($(this).val() == 'None') {
+                $(this).val('')
+            }
+        });
+    </script>
+{% endblock %}

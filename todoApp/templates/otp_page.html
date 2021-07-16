@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static 'css/signin.css' %}">
+{% endblock %}
+
+{% block main_content %}
+<div class="form-block">
+  <form class="form-signin text-center" method="POST" action="{% url 'verify_otp' %}">
+    {% csrf_token %}
+    <img class="mb-4" src="{% static 'images/avatar3.png' %}" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal">Account Verification</h1>
+    
+    <label for="inputOTP" class="sr-only">Enter OTP</label>
+    <input type="password" name="otp" id="inputOTP" class="form-control" placeholder="Enter OTP" required autofocus>
+    
+    <div class="mb-3">
+      {% if msgs %}
+      <span>{{ msgs }}</span>
+      {% endif %}
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+    <p class="mt-5 mb-3 text-muted">&copy; 2017-2021</p>
+  </form>
+</div>
+{% endblock %}
